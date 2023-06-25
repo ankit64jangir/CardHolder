@@ -1,26 +1,30 @@
+import { ThemeProvider } from "@shopify/restyle";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, useColorScheme } from "react-native";
+import { Box } from "./src/theme";
+import theme from "./src/theme";
+import { darkTheme } from "./src/theme/theme";
 
 export default function App() {
+  const scheme = useColorScheme();
   return (
-    <View style={styles.container}>
-      <Text
-        style={{
-          fontSize: 30,
-        }}
+    <ThemeProvider theme={scheme === "dark" ? darkTheme : theme}>
+      <Box
+        flex={1}
+        justifyContent="center"
+        alignItems="center"
+        bg="mainBackground"
       >
-        🫣
-      </Text>
-      <StatusBar style="auto" />
-    </View>
+        <Text
+          style={{
+            fontSize: 30,
+          }}
+          // color="lightGray"
+        >
+          🫣jkjknmn
+        </Text>
+        <StatusBar style="auto" />
+      </Box>
+    </ThemeProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
