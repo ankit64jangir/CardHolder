@@ -61,6 +61,11 @@ const theme = createTheme({
     primaryCardText: palette.white,
     secondaryCardText: palette.black,
   },
+  textVariants: {
+    defaults: {
+      fontSize: 16,
+    },
+  },
   spacing,
 });
 
