@@ -1,15 +1,10 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import { memo, useEffect } from "react";
-import {
-  Dimensions,
-  Pressable,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { memo, useEffect, useState } from "react";
+import { Dimensions, Pressable } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -19,13 +14,27 @@ import { Box, Text } from "../theme";
 const { width, height } = Dimensions.get("window");
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-const Cards = [1, 2, 3, 4];
 
 const HomeScreen = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   const expanded = useSharedValue(0);
 
+  const [cards, setCards] = useState<IBankCard[]>([]);
+  useEffect(() => {
+    const retrieveArray = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem("cards");
+        if (jsonValue !== null) {
+          const parsedArray = JSON.parse(jsonValue);
+          setCards(parsedArray);
+        }
+      } catch (error) {
+        console.log("Error retrieving array:", error);
+      }
+    };
+    retrieveArray();
+  }, []);
   const titleStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -36,32 +45,18 @@ const HomeScreen = () => {
     };
   });
 
+  const closeAnimatedBtn = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(expanded.value),
+    };
+  });
+
   const handleCardPress = () => {
     expanded.value = 1;
     if (expanded.value == 1) {
+      //@ts-ignore
       navigation.navigate("AddCard");
     }
-  };
-
-  const getAnimatedStyle = (index: number) => {
-    return useAnimatedStyle(() => {
-      const initialSpace = (index + 1) * 50;
-      const expandedSpace = (index * height) / 4;
-      const extraSpace = initialSpace / (index + 1) + index * 10;
-
-      const translateY =
-        expanded.value === 1 ? expandedSpace + extraSpace : initialSpace;
-
-      return {
-        transform: [
-          {
-            translateY: withSpring(translateY, {
-              mass: 0.5,
-            }),
-          },
-        ],
-      };
-    });
   };
 
   return (
@@ -76,27 +71,26 @@ const HomeScreen = () => {
         pb="4"
       >
         <Animated.Text style={[titleStyle]}>Cards</Animated.Text>
-        <TouchableOpacity onPress={() => (expanded.value = 0)}>
+        <AnimatedPressable
+          onPress={() => (expanded.value = 0)}
+          style={[closeAnimatedBtn]}
+        >
           <Text>Close</Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
       </Box>
-      <Box mx="2" mt="-10" marginBottom="80">
-        {Cards.map((card, index) => {
-          const aStyle = getAnimatedStyle(index);
+      <Box mx="2">
+        {cards?.map((card, index) => {
           return (
             <AnimatedPressable
               onPress={handleCardPress}
               key={index}
-              style={[
-                aStyle,
-                {
-                  position: "absolute",
-                  width: "100%",
-                  //   alignSelf: "center",
-                },
-              ]}
+              style={{
+                position: "absolute",
+                width: "100%",
+                top: -120,
+              }}
             >
-              <Card />
+              <Card key={index} card={card} expand={expanded} index={index} />
             </AnimatedPressable>
           );
         })}
