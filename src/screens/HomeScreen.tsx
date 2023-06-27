@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { memo, useEffect, useState } from "react";
-import { Dimensions, Pressable } from "react-native";
+import { Pressable, TouchableOpacity } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -9,9 +9,9 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Card from "../components/Card";
-import { Box, Text } from "../theme";
-
-const { width, height } = Dimensions.get("window");
+import { CloseIcon, PlusIcon } from "../icons";
+import theme, { Box, Text } from "../theme";
+import { height } from "../utils/dimensions";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -22,6 +22,7 @@ const HomeScreen = () => {
 
   const [cards, setCards] = useState<IBankCard[]>([]);
   const [scrollContainerHeight, setScrollContainerHeight] = useState(height);
+
   useEffect(() => {
     const retrieveArray = async () => {
       try {
@@ -36,15 +37,6 @@ const HomeScreen = () => {
     };
     retrieveArray();
   }, []);
-  const titleStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: withTiming(expanded.value === 0 ? width / 2.5 : 0),
-        },
-      ],
-    };
-  });
 
   const closeAnimatedBtn = useAnimatedStyle(() => {
     return {
@@ -73,7 +65,7 @@ const HomeScreen = () => {
       >
         <Box>
           <Text color="darkGray" fontWeight="500">
-            FRIDAY 16 JUNE
+            {new Date().toUTCString().slice(0, 12)}
           </Text>
           <Text fontSize={28} fontWeight="700">
             My Card
@@ -86,7 +78,7 @@ const HomeScreen = () => {
           }}
           style={[closeAnimatedBtn]}
         >
-          <Text>Close</Text>
+          <CloseIcon size={24} />
         </AnimatedPressable>
       </Box>
       <Box mx="2">
@@ -110,16 +102,25 @@ const HomeScreen = () => {
           })}
         </Animated.ScrollView>
       </Box>
-      {/* <TouchableOpacity
-        onPress={() => {
-          expanded.value = 1;
-          // navigation.navigate("AddCard")
-        }}
-      >
-        <Box>
-          <Text>Add card</Text>
-        </Box>
-      </TouchableOpacity> */}
+      <Box position="absolute" bottom={30} right={30} zIndex={50}>
+        <TouchableOpacity
+          onPress={() => {
+            //@ts-ignore
+            navigation.navigate("AddCard");
+          }}
+        >
+          <Box
+            bg="blue"
+            borderRadius={100}
+            justifyContent="center"
+            alignItems="center"
+            width={54}
+            height={54}
+          >
+            <PlusIcon size={30} color={theme.colors.white} />
+          </Box>
+        </TouchableOpacity>
+      </Box>
     </Box>
   );
 };

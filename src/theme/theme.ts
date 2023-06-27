@@ -60,6 +60,7 @@ const theme = createTheme({
     secondaryCardBackground: palette.white,
     primaryCardText: palette.white,
     secondaryCardText: palette.black,
+    blue: "#1E63EA",
   },
   textVariants: {
     defaults: {
@@ -79,6 +80,7 @@ export const darkTheme: Theme = {
     secondaryCardBackground: palette.white,
     primaryCardText: palette.white,
     secondaryCardText: palette.black,
+    blue: "#1E63EA",
   },
 };
 

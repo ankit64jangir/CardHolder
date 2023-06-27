@@ -6,8 +6,8 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
 } from "react-native-reanimated";
+import { height } from "../utils/dimensions";
 const colors = ["#2B5150", "#2E898A", "#159D9F"];
-const { height } = Dimensions.get("window");
 
 type CardTypes = {
   card: IBankCard;
