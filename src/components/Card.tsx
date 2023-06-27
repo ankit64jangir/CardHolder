@@ -15,14 +15,10 @@ type CardTypes = {
   expand: Animated.SharedValue<number>;
 };
 
-export const ITEM_HEIGHT = height / 13.5;
+export const ITEM_HEIGHT = height / 4;
 
 const Card = ({ card, expand, index }: CardTypes) => {
   const itemContainerAStyle = useAnimatedStyle(() => {
-    // const initialSpace = (index + 1) * 50;
-    // const expandedSpace = index * ITEM_HEIGHT;
-    // const extraSpace = initialSpace / (index + 1) + index * 10;
-
     const initialSpace = (index + 1) * 50;
     const expandedSpace = (index * height) / 4;
     const extraSpace = initialSpace / (index + 1) + index * 10;
@@ -33,7 +29,6 @@ const Card = ({ card, expand, index }: CardTypes) => {
       width: "100%",
       position: "absolute",
       top: 80,
-      // zIndex: 12 - index,
       transform: [
         {
           translateY: withSpring(translateY, {
@@ -44,14 +39,7 @@ const Card = ({ card, expand, index }: CardTypes) => {
     };
   });
   return (
-    <Animated.View
-      style={[
-        {
-          // height: height / 4,
-        },
-        itemContainerAStyle,
-      ]}
-    >
+    <Animated.View style={[itemContainerAStyle]}>
       <LinearGradient
         style={{
           height: height / 4,

@@ -21,6 +21,7 @@ const HomeScreen = () => {
   const expanded = useSharedValue(0);
 
   const [cards, setCards] = useState<IBankCard[]>([]);
+  const [scrollContainerHeight, setScrollContainerHeight] = useState(height);
   useEffect(() => {
     const retrieveArray = async () => {
       try {
@@ -52,6 +53,7 @@ const HomeScreen = () => {
   });
 
   const handleCardPress = () => {
+    setScrollContainerHeight((height / 4) * cards.length * 1.1);
     expanded.value = 1;
     if (expanded.value == 1) {
       //@ts-ignore
@@ -62,38 +64,51 @@ const HomeScreen = () => {
   return (
     <Box flex={1}>
       <Box
-        style={{ paddingTop: insets.top + 8 }}
+        style={{ paddingTop: insets.top + 10 }}
         justifyContent="space-between"
         alignItems="center"
         flexDirection="row"
-        bg="lightGray"
         px="4"
-        pb="4"
+        pb="2"
       >
-        <Animated.Text style={[titleStyle]}>Cards</Animated.Text>
+        <Box>
+          <Text color="darkGray" fontWeight="500">
+            FRIDAY 16 JUNE
+          </Text>
+          <Text fontSize={28} fontWeight="700">
+            My Card
+          </Text>
+        </Box>
         <AnimatedPressable
-          onPress={() => (expanded.value = 0)}
+          onPress={() => {
+            expanded.value = 0;
+            setScrollContainerHeight(height);
+          }}
           style={[closeAnimatedBtn]}
         >
           <Text>Close</Text>
         </AnimatedPressable>
       </Box>
       <Box mx="2">
-        {cards?.map((card, index) => {
-          return (
-            <AnimatedPressable
-              onPress={handleCardPress}
-              key={index}
-              style={{
-                position: "absolute",
-                width: "100%",
-                top: -120,
-              }}
-            >
-              <Card key={index} card={card} expand={expanded} index={index} />
-            </AnimatedPressable>
-          );
-        })}
+        <Animated.ScrollView
+          contentContainerStyle={{
+            height: scrollContainerHeight,
+          }}
+        >
+          {cards?.map((card, index) => {
+            return (
+              <AnimatedPressable
+                onPress={handleCardPress}
+                key={index}
+                style={{
+                  top: -120,
+                }}
+              >
+                <Card key={index} card={card} expand={expanded} index={index} />
+              </AnimatedPressable>
+            );
+          })}
+        </Animated.ScrollView>
       </Box>
       {/* <TouchableOpacity
         onPress={() => {
