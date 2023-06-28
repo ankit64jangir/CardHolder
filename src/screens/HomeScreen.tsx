@@ -1,6 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import { memo, useEffect, useState } from "react";
+import { memo, useState } from "react";
 import { Pressable, TouchableOpacity } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -9,6 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Card from "../components/Card";
+import useCards from "../hooks/useCards";
 import { CloseIcon, PlusIcon } from "../icons";
 import theme, { Box, Text } from "../theme";
 import { height } from "../utils/dimensions";
@@ -20,23 +20,8 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const expanded = useSharedValue(0);
 
-  const [cards, setCards] = useState<IBankCard[]>([]);
+  const { cards } = useCards();
   const [scrollContainerHeight, setScrollContainerHeight] = useState(height);
-
-  useEffect(() => {
-    const retrieveArray = async () => {
-      try {
-        const jsonValue = await AsyncStorage.getItem("cards");
-        if (jsonValue !== null) {
-          const parsedArray = JSON.parse(jsonValue);
-          setCards(parsedArray);
-        }
-      } catch (error) {
-        console.log("Error retrieving array:", error);
-      }
-    };
-    retrieveArray();
-  }, []);
 
   const closeAnimatedBtn = useAnimatedStyle(() => {
     return {
@@ -78,7 +63,7 @@ const HomeScreen = () => {
           }}
           style={[closeAnimatedBtn]}
         >
-          <CloseIcon size={24} />
+          <CloseIcon color={theme.colors.blue} size={24} />
         </AnimatedPressable>
       </Box>
       <Box mx="2">
