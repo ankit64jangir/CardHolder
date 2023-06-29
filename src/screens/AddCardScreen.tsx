@@ -1,16 +1,18 @@
 import { Button, Pressable, StyleSheet, TextInput } from "react-native";
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Box, Text } from "../theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BackButton from "../components/core/Button";
+import useCards from "../hooks/useCards";
 
 const AddCardScreen = () => {
   const insets = useSafeAreaInsets();
 
+  const { cards } = useCards();
   const [bankCardData, setBankCardData] = useState<IBankCard>({
     card_number: "",
-    card_type: undefined,
+    card_type: "unknown",
     cvv: "",
     name: "",
     type: "BANK_CARD",
@@ -18,27 +20,50 @@ const AddCardScreen = () => {
   });
 
   const handleAddCard = async () => {
-    console.log("New Card Details:", bankCardData);
-
     try {
-      const jsonValue = JSON.stringify([
-        { ...bankCardData, card_type: "visa" },
-      ]);
+      const jsonValue = JSON.stringify([...cards, bankCardData]);
       console.log(jsonValue);
-
       await AsyncStorage.setItem("cards", jsonValue);
     } catch (e) {
       // saving error
     }
     setBankCardData({
       card_number: "",
-      card_type: undefined,
+      card_type: "unknown",
       cvv: "",
       name: "",
       type: "BANK_CARD",
       validity: "",
     });
   };
+
+  function detectCardType(cardNumber: string) {
+    cardNumber = cardNumber.replace(/\D/g, "");
+
+    var patterns: any = {
+      visa: /^4[0-9]{6,}$/,
+      mastercard:
+        /^5[1-5][0-9]{5,}|222[1-9][0-9]{3,}|22[3-9][0-9]{4,}|2[3-6][0-9]{5,}|27[01][0-9]{4,}|2720[0-9]{3,}$/,
+      amex: /^3[47][0-9]{5,}$/,
+      discover: /^6(?:011|5[0-9]{2})[0-9]{3,}$/,
+      dinersclub: /^3(?:0[0-5]|[68][0-9])[0-9]{4,}$/,
+      jcb: /^(?:2131|1800|35[0-9]{3})[0-9]{3,}$/,
+    };
+
+    for (var cardType in patterns) {
+      if (patterns[cardType].test(cardNumber)) {
+        return cardType;
+      }
+    }
+
+    return "unknown";
+  }
+
+  useEffect(() => {
+    let type = detectCardType(bankCardData.card_number);
+    // setCard_Type(type);
+    setBankCardData({ ...bankCardData, card_type: type as CardType });
+  }, [bankCardData.card_number]);
 
   return (
     <Box flex={1}>
