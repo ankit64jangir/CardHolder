@@ -21,8 +21,7 @@ const AddCardScreen = () => {
 
   const handleAddCard = async () => {
     try {
-      const jsonValue = JSON.stringify([...cards, bankCardData]);
-      console.log(jsonValue);
+      const jsonValue = JSON.stringify([bankCardData, ...cards]);
       await AsyncStorage.setItem("cards", jsonValue);
     } catch (e) {
       // saving error
@@ -38,30 +37,37 @@ const AddCardScreen = () => {
   };
 
   function detectCardType(cardNumber: string) {
+    let jcb_regex = new RegExp("^(?:2131|1800|35d{3})d{11}$");
+    let amex_regex = new RegExp("^3[47][0-9]{13}$");
+    let diners_regex = new RegExp("^3(?:0[0-5]|[68][0-9])[0-9]{11}$");
+    let visa_regex = new RegExp("^4[0-9]{12}(?:[0-9]{3})?$");
+    let mastercard_regex = new RegExp(
+      "^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$"
+    );
+    let discover_regex = new RegExp("^6(?:011|5[0-9]{2})[0-9]{12}$");
+
     cardNumber = cardNumber.replace(/\D/g, "");
 
-    var patterns: any = {
-      visa: /^4[0-9]{6,}$/,
-      mastercard:
-        /^5[1-5][0-9]{5,}|222[1-9][0-9]{3,}|22[3-9][0-9]{4,}|2[3-6][0-9]{5,}|27[01][0-9]{4,}|2720[0-9]{3,}$/,
-      amex: /^3[47][0-9]{5,}$/,
-      discover: /^6(?:011|5[0-9]{2})[0-9]{3,}$/,
-      dinersclub: /^3(?:0[0-5]|[68][0-9])[0-9]{4,}$/,
-      jcb: /^(?:2131|1800|35[0-9]{3})[0-9]{3,}$/,
-    };
-
-    for (var cardType in patterns) {
-      if (patterns[cardType].test(cardNumber)) {
-        return cardType;
-      }
+    var cardType: CardType = "unknown";
+    if (cardNumber.match(jcb_regex)) {
+      cardType = "jcb";
+    } else if (cardNumber.match(amex_regex)) {
+      cardType = "amex";
+    } else if (cardNumber.match(diners_regex)) {
+      cardType = "dinersclub";
+    } else if (cardNumber.match(visa_regex)) {
+      cardType = "visa";
+    } else if (cardNumber.match(mastercard_regex)) {
+      cardType = "mastercard";
+    } else if (cardNumber.match(discover_regex)) {
+      cardType = "discover";
     }
 
-    return "unknown";
+    return cardType;
   }
 
   useEffect(() => {
     let type = detectCardType(bankCardData.card_number);
-    // setCard_Type(type);
     setBankCardData({ ...bankCardData, card_type: type as CardType });
   }, [bankCardData.card_number]);
 
