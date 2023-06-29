@@ -68,6 +68,7 @@ const HomeScreen = () => {
       </Box>
       <Box mx="2">
         <Animated.ScrollView
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             height: scrollContainerHeight,
           }}

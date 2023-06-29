@@ -1,4 +1,4 @@
-import { Dimensions, Text } from "react-native";
+import { Text } from "react-native";
 import React, { memo } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Box } from "../theme";
@@ -7,7 +7,14 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { height } from "../utils/dimensions";
+
 const colors = ["#2B5150", "#2E898A", "#159D9F"];
+const visa = ["#003399", "#0077FF", "#33AAFF", "#66CCFF"];
+const mastercard = ["#FF4D4D", "#FF8C1A", "#FFCC00"];
+const amex = ["#003399", "#730099", "#BD00FF"];
+const discover = ["#FF7F00", "#FFC800", "#FFEB00"];
+const dinersClub = ["#8C1B18", "#1C3788"];
+const jcb = ["#003399", "#CC0000"];
 
 type CardTypes = {
   card: IBankCard;
@@ -15,9 +22,33 @@ type CardTypes = {
   expand: Animated.SharedValue<number>;
 };
 
-export const ITEM_HEIGHT = height / 4;
-
 const Card = ({ card, expand, index }: CardTypes) => {
+  const getCardColor = () => {
+    switch (card.card_type) {
+      case "visa":
+        return visa;
+        break;
+      case "mastercard":
+        return mastercard;
+        break;
+      case "amex":
+        return amex;
+        break;
+      case "dinersclub":
+        return dinersClub;
+        break;
+      case "discover":
+        return discover;
+        break;
+      case "jcb":
+        return jcb;
+        break;
+      default:
+        return colors;
+        break;
+    }
+  };
+
   const itemContainerAStyle = useAnimatedStyle(() => {
     const initialSpace = (index + 1) * 50;
     const expandedSpace = (index * height) / 4;
@@ -49,7 +80,7 @@ const Card = ({ card, expand, index }: CardTypes) => {
           justifyContent: "space-between",
         }}
         start={{ x: 0.1, y: 0 }}
-        colors={colors}
+        colors={getCardColor()}
       >
         <Box flexDirection="row" justifyContent="space-between">
           <Text
