@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import { Image, Text } from "react-native";
 import React, { memo } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Box } from "../theme";
@@ -7,6 +7,7 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { height } from "../utils/dimensions";
+import { cardTypeIndex, CARD_TYPE_IMAGES } from "../utils/constants";
 
 const colors = ["#2B5150", "#2E898A", "#159D9F"];
 const visa = ["#003399", "#0077FF", "#33AAFF", "#66CCFF"];
@@ -94,27 +95,47 @@ const Card = ({ card, expand, index }: CardTypes) => {
             Credit
           </Text>
         </Box>
-        <Box>
-          <Text
-            style={{
-              fontSize: 17,
-              fontWeight: "500",
-              color: "white",
-              textAlignVertical: "center",
-            }}
-          >
-            {card.name}
-          </Text>
-          <Text
-            style={{
-              fontSize: 17,
-              fontWeight: "500",
-              color: "white",
-              textAlignVertical: "center",
-            }}
-          >
-            {card.card_number}
-          </Text>
+        <Box
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Box>
+            <Text
+              style={{
+                fontSize: 17,
+                fontWeight: "500",
+                color: "white",
+                textAlignVertical: "center",
+              }}
+            >
+              {card.name}
+            </Text>
+            <Text
+              style={{
+                fontSize: 17,
+                fontWeight: "500",
+                color: "white",
+                textAlignVertical: "center",
+              }}
+            >
+              {card.card_number}
+            </Text>
+          </Box>
+
+          {card.card_type !== "unknown" && (
+            <Image
+              source={
+                card.card_type &&
+                CARD_TYPE_IMAGES[cardTypeIndex[card.card_type]]
+              }
+              resizeMode="contain"
+              style={{
+                height: 50,
+                width: 50,
+              }}
+            />
+          )}
         </Box>
       </LinearGradient>
     </Animated.View>
