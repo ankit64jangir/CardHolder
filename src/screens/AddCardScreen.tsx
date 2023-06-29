@@ -1,10 +1,28 @@
-import { Button, Pressable, StyleSheet, TextInput } from "react-native";
+import { Button, Image, StyleSheet, TextInput } from "react-native";
 import React, { memo, useEffect, useState } from "react";
 import { Box, Text } from "../theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BackButton from "../components/core/Button";
 import useCards from "../hooks/useCards";
+
+const CARD_TYPE_IMAGES = [
+  require("../../assets/images/dinersclub.png"),
+  require("../../assets/images/mastercard.png"),
+  require("../../assets/images/discover.png"),
+  require("../../assets/images/amex.png"),
+  require("../../assets/images/visa.png"),
+  require("../../assets/images/jcb.png"),
+];
+
+const cardTypeIndex: any = {
+  dinersclub: 0,
+  mastercard: 1,
+  discover: 2,
+  amex: 3,
+  visa: 4,
+  jcb: 5,
+};
 
 const AddCardScreen = () => {
   const insets = useSafeAreaInsets();
@@ -95,15 +113,33 @@ const AddCardScreen = () => {
             setBankCardData({ ...bankCardData, name: value })
           }
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Card Number"
-          value={bankCardData.card_number}
-          onChangeText={(value) =>
-            setBankCardData({ ...bankCardData, card_number: value })
-          }
-          keyboardType="number-pad"
-        />
+        <Box position="relative">
+          <TextInput
+            style={styles.input}
+            placeholder="Card Number"
+            value={bankCardData.card_number}
+            onChangeText={(value) =>
+              setBankCardData({ ...bankCardData, card_number: value })
+            }
+            keyboardType="number-pad"
+          />
+          {bankCardData.card_type !== "unknown" && (
+            <Box position="absolute" right={4} top={5}>
+              <Image
+                source={
+                  bankCardData.card_type &&
+                  CARD_TYPE_IMAGES[cardTypeIndex[bankCardData.card_type]]
+                }
+                resizeMode="contain"
+                style={{
+                  height: 30,
+                  width: 80,
+                }}
+              />
+            </Box>
+          )}
+        </Box>
+
         <Box
           flexDirection="row"
           justifyContent="space-between"
@@ -134,16 +170,6 @@ const AddCardScreen = () => {
           <Button title="Add Card" onPress={handleAddCard} />
         </Box>
       </Box>
-
-      {/* <Pressable
-        onPress={() => {
-          storeData(data);
-        }}
-      >
-        <Box>
-          <Text>Add</Text>
-        </Box>
-      </Pressable> */}
     </Box>
   );
 };
