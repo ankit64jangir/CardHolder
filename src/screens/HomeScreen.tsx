@@ -30,7 +30,7 @@ const HomeScreen = () => {
   });
 
   const handleCardPress = () => {
-    setScrollContainerHeight((height / 4) * cards.length * 1.3);
+    setScrollContainerHeight((height / 3.5) * cards.length * 1.3);
     expanded.value = 1;
     if (expanded.value == 1) {
       //@ts-ignore

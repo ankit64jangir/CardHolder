@@ -1,13 +1,15 @@
-import { Image, Text } from "react-native";
+import { Image, StyleSheet } from "react-native";
 import React, { memo } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { Box } from "../theme";
+import { Box, Text } from "../theme";
 import Animated, {
   useAnimatedStyle,
   withSpring,
 } from "react-native-reanimated";
 import { height } from "../utils/dimensions";
 import { cardTypeIndex, CARD_TYPE_IMAGES } from "../utils/constants";
+import { ChipIcon, WaveLeftIcon } from "../icons";
+import { useTheme } from "../theme/theme";
 
 const colors = ["#2B5150", "#2E898A", "#159D9F"];
 const visa = ["#003399", "#0077FF", "#33AAFF", "#66CCFF"];
@@ -24,6 +26,7 @@ type CardTypes = {
 };
 
 const Card = ({ card, expand, index }: CardTypes) => {
+  const theme = useTheme();
   const getCardColor = () => {
     switch (card.card_type) {
       case "visa":
@@ -52,7 +55,7 @@ const Card = ({ card, expand, index }: CardTypes) => {
 
   const itemContainerAStyle = useAnimatedStyle(() => {
     const initialSpace = (index + 1) * 50;
-    const expandedSpace = (index * height) / 4;
+    const expandedSpace = (index * height) / 3.5;
     const extraSpace = initialSpace / (index + 1) + index * 10;
 
     const translateY =
@@ -74,16 +77,16 @@ const Card = ({ card, expand, index }: CardTypes) => {
     <Animated.View style={[itemContainerAStyle]}>
       <LinearGradient
         style={{
-          height: height / 4,
+          height: height / 3.5,
           borderRadius: 12,
-          paddingHorizontal: 10,
+          paddingHorizontal: 16,
           paddingVertical: 20,
           justifyContent: "space-between",
         }}
         start={{ x: 0.1, y: 0 }}
         colors={getCardColor()}
       >
-        <Box flexDirection="row" justifyContent="space-between">
+        <Box>
           <Text
             style={{
               fontSize: 17,
@@ -92,37 +95,54 @@ const Card = ({ card, expand, index }: CardTypes) => {
               textAlignVertical: "center",
             }}
           >
-            Credit
+            BANK NAME
           </Text>
         </Box>
+
         <Box
           flexDirection="row"
           justifyContent="space-between"
           alignItems="center"
         >
-          <Box>
-            <Text
-              style={{
-                fontSize: 17,
-                fontWeight: "500",
-                color: "white",
-                textAlignVertical: "center",
-              }}
-            >
-              {card.name}
-            </Text>
-            <Text
-              style={{
-                fontSize: 17,
-                fontWeight: "500",
-                color: "white",
-                textAlignVertical: "center",
-              }}
-            >
-              {card.card_number}
-            </Text>
-          </Box>
+          <ChipIcon size={50} />
+          <WaveLeftIcon size={24} color={theme.colors.white} />
+        </Box>
 
+        <Box
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Text style={styles.cardNumber}>&bull;&bull;&bull;&bull;</Text>
+          <Text style={styles.cardNumber}>&bull;&bull;&bull;&bull;</Text>
+          <Text style={styles.cardNumber}>&bull;&bull;&bull;&bull;</Text>
+          <Text style={styles.cardNumber}>
+            {String(card.card_number).slice(-4)}
+          </Text>
+        </Box>
+
+        <Box flexDirection="row" alignItems="center">
+          <Text fontSize={8} color="white" textAlign="center">
+            VALID{"\n"}THRU
+          </Text>
+          <Text style={styles.textStyle} ml="1">
+            {card.validity}
+          </Text>
+        </Box>
+
+        <Box
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Text
+            fontSize={20}
+            fontWeight={"bold"}
+            color="white"
+            letterSpacing={2}
+          >
+            {card.name.toUpperCase()}
+          </Text>
           {card.card_type !== "unknown" && (
             <Image
               source={
@@ -141,5 +161,20 @@ const Card = ({ card, expand, index }: CardTypes) => {
     </Animated.View>
   );
 };
+
+const styles = StyleSheet.create({
+  cardNumber: {
+    fontSize: 22,
+    fontWeight: "400",
+    color: "white",
+    letterSpacing: 4,
+  },
+  textStyle: {
+    fontSize: 22,
+    fontWeight: "400",
+    color: "white",
+    letterSpacing: 4,
+  },
+});
 
 export default memo(Card);

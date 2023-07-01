@@ -6,9 +6,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import BackButton from "../components/core/Button";
 import useCards from "../hooks/useCards";
 import { cardTypeIndex, CARD_TYPE_IMAGES } from "../utils/constants";
+import { useNavigation } from "@react-navigation/native";
 
 const AddCardScreen = () => {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
 
   const { cards } = useCards();
   const [bankCardData, setBankCardData] = useState<IBankCard>({
@@ -19,6 +21,12 @@ const AddCardScreen = () => {
     type: "BANK_CARD",
     validity: "",
   });
+
+  const isDisabled =
+    !bankCardData.card_number ||
+    !bankCardData.name ||
+    !bankCardData.validity ||
+    !bankCardData.cvv;
 
   const handleAddCard = async () => {
     try {
@@ -35,10 +43,11 @@ const AddCardScreen = () => {
       type: "BANK_CARD",
       validity: "",
     });
+    navigation.goBack();
   };
 
   function detectCardType(cardNumber: string) {
-    let jcb_regex = new RegExp("^(?:2131|1800|35d{3})d{11}$");
+    let jcb_regex = new RegExp("^(?:2131|1800|35[0-9]{3})[0-9]{3,}$");
     let amex_regex = new RegExp("^3[47][0-9]{13}$");
     let diners_regex = new RegExp("^3(?:0[0-5]|[68][0-9])[0-9]{11}$");
     let visa_regex = new RegExp("^4[0-9]{12}(?:[0-9]{3})?$");
@@ -150,7 +159,11 @@ const AddCardScreen = () => {
           />
         </Box>
         <Box alignItems="center">
-          <Button title="Add Card" onPress={handleAddCard} />
+          <Button
+            title="Add Card"
+            onPress={handleAddCard}
+            disabled={isDisabled}
+          />
         </Box>
       </Box>
     </Box>
