@@ -15,8 +15,8 @@ const colors = ["#2B5150", "#2E898A", "#159D9F"];
 const visa = ["#003399", "#0077FF", "#33AAFF", "#66CCFF"];
 const mastercard = ["#FF4D4D", "#FF8C1A", "#FFCC00"];
 const amex = ["#003399", "#730099", "#BD00FF"];
-const discover = ["#FF7F00", "#FFC800", "#FFEB00"];
-const dinersClub = ["#8C1B18", "#1C3788"];
+const discover = ["#FFB800", "#FFD700"];
+const dinersClub = ["#444444", "#888888", "#CCCCCC"];
 const jcb = ["#003399", "#CC0000"];
 
 type CardTypes = {
@@ -152,7 +152,11 @@ const Card = ({ card, expand, index }: CardTypes) => {
               resizeMode="contain"
               style={{
                 height: 50,
-                width: 50,
+                width:
+                  card.card_type === "dinersclub" ||
+                  card.card_type === "discover"
+                    ? 100
+                    : 50,
               }}
             />
           )}
@@ -167,7 +171,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "400",
     color: "white",
-    letterSpacing: 4,
+    letterSpacing: 5,
   },
   textStyle: {
     fontSize: 22,
