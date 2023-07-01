@@ -15,3 +15,11 @@ export const cardTypeIndex: any = {
   visa: 4,
   jcb: 5,
 };
+
+export const defaultGradient = ["#2B5150", "#2E898A", "#159D9F"];
+export const visaGradient = ["#003399", "#0077FF", "#33AAFF", "#66CCFF"];
+export const mastercardGradient = ["#FF4D4D", "#FF8C1A", "#FFCC00"];
+export const amexGradient = ["#003399", "#730099", "#BD00FF"];
+export const discoverGradient = ["#FFB800", "#FFD700"];
+export const dinersClubGradient = ["#444444", "#888888", "#CCCCCC"];
+export const jcbGradient = ["#003399", "#CC0000"];

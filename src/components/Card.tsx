@@ -7,17 +7,19 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { height } from "../utils/dimensions";
-import { cardTypeIndex, CARD_TYPE_IMAGES } from "../utils/constants";
+import {
+  amexGradient,
+  cardTypeIndex,
+  CARD_TYPE_IMAGES,
+  defaultGradient,
+  dinersClubGradient,
+  discoverGradient,
+  jcbGradient,
+  mastercardGradient,
+  visaGradient,
+} from "../utils/constants";
 import { ChipIcon, WaveLeftIcon } from "../icons";
 import { useTheme } from "../theme/theme";
-
-const colors = ["#2B5150", "#2E898A", "#159D9F"];
-const visa = ["#003399", "#0077FF", "#33AAFF", "#66CCFF"];
-const mastercard = ["#FF4D4D", "#FF8C1A", "#FFCC00"];
-const amex = ["#003399", "#730099", "#BD00FF"];
-const discover = ["#FFB800", "#FFD700"];
-const dinersClub = ["#444444", "#888888", "#CCCCCC"];
-const jcb = ["#003399", "#CC0000"];
 
 type CardTypes = {
   card: IBankCard;
@@ -30,25 +32,25 @@ const Card = ({ card, expand, index }: CardTypes) => {
   const getCardColor = () => {
     switch (card.card_type) {
       case "visa":
-        return visa;
+        return visaGradient;
         break;
       case "mastercard":
-        return mastercard;
+        return mastercardGradient;
         break;
       case "amex":
-        return amex;
+        return amexGradient;
         break;
       case "dinersclub":
-        return dinersClub;
+        return dinersClubGradient;
         break;
       case "discover":
-        return discover;
+        return discoverGradient;
         break;
       case "jcb":
-        return jcb;
+        return jcbGradient;
         break;
       default:
-        return colors;
+        return defaultGradient;
         break;
     }
   };
@@ -87,15 +89,8 @@ const Card = ({ card, expand, index }: CardTypes) => {
         colors={getCardColor()}
       >
         <Box>
-          <Text
-            style={{
-              fontSize: 17,
-              fontWeight: "500",
-              color: "white",
-              textAlignVertical: "center",
-            }}
-          >
-            BANK NAME
+          <Text fontSize={18} fontWeight="500" color="white" letterSpacing={1}>
+            {card.bank_card_name}
           </Text>
         </Box>
 
@@ -125,7 +120,7 @@ const Card = ({ card, expand, index }: CardTypes) => {
           <Text fontSize={8} color="white" textAlign="center">
             VALID{"\n"}THRU
           </Text>
-          <Text style={styles.textStyle} ml="1">
+          <Text style={styles.validityStyle} ml="1">
             {card.validity}
           </Text>
         </Box>
@@ -136,7 +131,7 @@ const Card = ({ card, expand, index }: CardTypes) => {
           alignItems="center"
         >
           <Text
-            fontSize={20}
+            fontSize={18}
             fontWeight={"bold"}
             color="white"
             letterSpacing={2}
@@ -173,8 +168,8 @@ const styles = StyleSheet.create({
     color: "white",
     letterSpacing: 5,
   },
-  textStyle: {
-    fontSize: 22,
+  validityStyle: {
+    fontSize: 18,
     fontWeight: "400",
     color: "white",
     letterSpacing: 4,

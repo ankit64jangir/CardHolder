@@ -10,6 +10,7 @@ type CardType =
 
 interface IBankCard {
   type: "BANK_CARD";
+  bank_card_name: string;
   name: string;
   card_number: string;
   validity: string;

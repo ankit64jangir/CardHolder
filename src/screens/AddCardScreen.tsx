@@ -16,6 +16,7 @@ const AddCardScreen = () => {
   const [bankCardData, setBankCardData] = useState<IBankCard>({
     card_number: "",
     card_type: "unknown",
+    bank_card_name: "",
     cvv: "",
     name: "",
     type: "BANK_CARD",
@@ -38,6 +39,7 @@ const AddCardScreen = () => {
     setBankCardData({
       card_number: "",
       card_type: "unknown",
+      bank_card_name: "",
       cvv: "",
       name: "",
       type: "BANK_CARD",
@@ -97,6 +99,14 @@ const AddCardScreen = () => {
       </Box>
 
       <Box flex={1} mx="4" mt="4">
+        <TextInput
+          style={styles.input}
+          placeholder="Bank/Card Name"
+          value={bankCardData.bank_card_name}
+          onChangeText={(value) =>
+            setBankCardData({ ...bankCardData, bank_card_name: value })
+          }
+        />
         <TextInput
           style={styles.input}
           placeholder="Card Holder Name"
