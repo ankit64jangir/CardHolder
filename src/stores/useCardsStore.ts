@@ -3,7 +3,7 @@ import { create } from "zustand";
 
 type CardsStoreTypes = {
   cards: IBankCard[];
-  setCard: (card: IBankCard) => void;
+  setCard: (card: IBankCard[]) => void;
 };
 
 const cards: IBankCard[] = [];
@@ -12,19 +12,12 @@ const useCardsStore = create<CardsStoreTypes>((set, get) => ({
   cards: cards,
   setCard: async (card) => {
     // Update the store
-    set((state) => ({ cards: [...state.cards, card] }));
+    set(() => ({ cards: card }));
 
     // Update AsyncStorage
     try {
-      const storedCards = await AsyncStorage.getItem("cards");
-      let parsedArray: IBankCard[] = [];
-
-      if (storedCards !== null) {
-        parsedArray = JSON.parse(storedCards);
-      }
-
-      parsedArray.push(card);
-      await AsyncStorage.setItem("cards", JSON.stringify(parsedArray));
+      const jsonValue = JSON.stringify(card);
+      await AsyncStorage.setItem("cards", jsonValue);
     } catch (error) {
       console.log("Error adding card to AsyncStorage:", error);
     }

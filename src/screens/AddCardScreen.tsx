@@ -11,7 +11,7 @@ const AddCardScreen = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
-  const { setCard } = useCardsStore();
+  const { cards, setCard } = useCardsStore();
   const [bankCardData, setBankCardData] = useState<IBankCard>({
     card_number: "",
     card_type: "unknown",
@@ -29,7 +29,7 @@ const AddCardScreen = () => {
     !bankCardData.cvv;
 
   const handleAddCard = () => {
-    setCard(bankCardData);
+    setCard([bankCardData, ...cards]);
     setBankCardData({
       card_number: "",
       card_type: "unknown",
