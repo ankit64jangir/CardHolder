@@ -2,17 +2,16 @@ import { Button, Image, StyleSheet, TextInput } from "react-native";
 import React, { memo, useEffect, useState } from "react";
 import { Box, Text } from "../theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import BackButton from "../components/core/Button";
-import useCards from "../hooks/useCards";
 import { cardTypeIndex, CARD_TYPE_IMAGES } from "../utils/constants";
 import { useNavigation } from "@react-navigation/native";
+import useCardsStore from "../stores/useCardsStore";
 
 const AddCardScreen = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
-  const { cards } = useCards();
+  const { setCard } = useCardsStore();
   const [bankCardData, setBankCardData] = useState<IBankCard>({
     card_number: "",
     card_type: "unknown",
@@ -29,13 +28,8 @@ const AddCardScreen = () => {
     !bankCardData.validity ||
     !bankCardData.cvv;
 
-  const handleAddCard = async () => {
-    try {
-      const jsonValue = JSON.stringify([bankCardData, ...cards]);
-      await AsyncStorage.setItem("cards", jsonValue);
-    } catch (e) {
-      // saving error
-    }
+  const handleAddCard = () => {
+    setCard(bankCardData);
     setBankCardData({
       card_number: "",
       card_type: "unknown",

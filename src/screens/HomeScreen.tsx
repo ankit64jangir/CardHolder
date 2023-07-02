@@ -8,9 +8,9 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Card from "../components/Card";
-import useCards from "../hooks/useCards";
 import { CloseIcon, PlusIcon } from "../icons";
 import { NavigationType } from "../navigation/AppNavigation";
+import useCardsStore from "../stores/useCardsStore";
 import theme, { Box, Text } from "../theme";
 import { height } from "../utils/dimensions";
 
@@ -21,7 +21,7 @@ const HomeScreen = () => {
   const navigation = useNavigation<NavigationType<"ViewCard">>();
   const expanded = useSharedValue(0);
 
-  const { cards } = useCards();
+  const { cards } = useCardsStore();
   const [scrollContainerHeight, setScrollContainerHeight] = useState(height);
 
   const closeAnimatedBtn = useAnimatedStyle(() => {

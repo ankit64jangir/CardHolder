@@ -96,7 +96,7 @@ const Card = ({
       >
         <Box>
           <Text fontSize={18} fontWeight="500" color="white" letterSpacing={1}>
-            {card.bank_card_name}
+            {card.bank_card_name.toUpperCase()}
           </Text>
         </Box>
 
