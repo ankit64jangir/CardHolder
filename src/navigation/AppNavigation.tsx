@@ -1,9 +1,28 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { CompositeNavigationProp } from "@react-navigation/native";
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationProp,
+} from "@react-navigation/native-stack";
 import { memo } from "react";
 import AddCardScreen from "../screens/AddCardScreen";
 import HomeScreen from "../screens/HomeScreen";
+import ViewCardScreen from "../screens/ViewCardScreen";
 
-const Stack = createNativeStackNavigator();
+export type StackNavigatorParamList = {
+  Home: undefined;
+  AddCard: undefined;
+  ViewCard: {
+    card: IBankCard;
+  };
+};
+
+export type NavigationType<RouteName extends keyof StackNavigatorParamList> =
+  CompositeNavigationProp<
+    NativeStackNavigationProp<StackNavigatorParamList, RouteName>,
+    NativeStackNavigationProp<StackNavigatorParamList>
+  >;
+
+const Stack = createNativeStackNavigator<StackNavigatorParamList>();
 
 const AppNavigation = () => {
   return (
@@ -20,6 +39,14 @@ const AppNavigation = () => {
           component={AddCardScreen}
           options={{
             animation: "fade_from_bottom",
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="ViewCard"
+          component={ViewCardScreen}
+          options={{
+            animation: "fade",
             headerShown: false,
           }}
         />

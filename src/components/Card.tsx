@@ -25,9 +25,15 @@ type CardTypes = {
   card: IBankCard;
   index: number;
   expand: Animated.SharedValue<number>;
+  displayCardAnimatedStyle?: boolean;
 };
 
-const Card = ({ card, expand, index }: CardTypes) => {
+const Card = ({
+  card,
+  expand,
+  index,
+  displayCardAnimatedStyle = true,
+}: CardTypes) => {
   const theme = useTheme();
   const getCardColor = () => {
     switch (card.card_type) {
@@ -55,7 +61,7 @@ const Card = ({ card, expand, index }: CardTypes) => {
     }
   };
 
-  const itemContainerAStyle = useAnimatedStyle(() => {
+  const cardAnimatedStyle = useAnimatedStyle(() => {
     const initialSpace = (index + 1) * 50;
     const expandedSpace = (index * height) / 3.5;
     const extraSpace = initialSpace / (index + 1) + index * 10;
@@ -76,7 +82,7 @@ const Card = ({ card, expand, index }: CardTypes) => {
     };
   });
   return (
-    <Animated.View style={[itemContainerAStyle]}>
+    <Animated.View style={[displayCardAnimatedStyle && cardAnimatedStyle]}>
       <LinearGradient
         style={{
           height: height / 3.5,

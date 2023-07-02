@@ -10,6 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Card from "../components/Card";
 import useCards from "../hooks/useCards";
 import { CloseIcon, PlusIcon } from "../icons";
+import { NavigationType } from "../navigation/AppNavigation";
 import theme, { Box, Text } from "../theme";
 import { height } from "../utils/dimensions";
 
@@ -17,7 +18,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const HomeScreen = () => {
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationType<"ViewCard">>();
   const expanded = useSharedValue(0);
 
   const { cards } = useCards();
@@ -29,12 +30,11 @@ const HomeScreen = () => {
     };
   });
 
-  const handleCardPress = () => {
+  const handleCardPress = (card: IBankCard) => {
     setScrollContainerHeight((height / 3.5) * cards.length * 1.3);
     expanded.value = 1;
     if (expanded.value == 1) {
-      //@ts-ignore
-      navigation.navigate("AddCard");
+      navigation.navigate("ViewCard", { card: card });
     }
   };
 
@@ -76,7 +76,7 @@ const HomeScreen = () => {
           {cards?.map((card, index) => {
             return (
               <AnimatedPressable
-                onPress={handleCardPress}
+                onPress={() => handleCardPress(card)}
                 key={index}
                 style={{
                   top: -120,
@@ -91,7 +91,6 @@ const HomeScreen = () => {
       <Box position="absolute" bottom={30} right={30} zIndex={50}>
         <TouchableOpacity
           onPress={() => {
-            //@ts-ignore
             navigation.navigate("AddCard");
           }}
         >
