@@ -15,16 +15,16 @@ CardHolder is a mobile application built with React Native that allows users to 
 Follow the steps below to set up and run the CardHolder app on your machine.
 
 1. Clone the repository:
-   `   git clone https://github.com/ankit64jangir/CardHolder.git`
+   `git clone https://github.com/ankit64jangir/CardHolder.git`
 
 2. Navigate to the project directory:
-   `   cd CardHolder`
+   `cd CardHolder`
 
 3. Install the dependencies:
-   `   yarn install`
+   `yarn install`
 
 4. Start the development server:
-   `  yarn start`
+   `yarn start`
 
 ## Dependencies
 
