@@ -61,7 +61,7 @@ const theme = createTheme({
     primaryCardText: palette.white,
     secondaryCardText: palette.black,
     blue: "#1E63EA",
-
+    modalBackdrop: "rgba(0, 0, 0, 0.25)",
     grayText: "#78716C",
   },
   textVariants: {
@@ -83,6 +83,7 @@ export const darkTheme: Theme = {
     primaryCardText: palette.white,
     secondaryCardText: palette.black,
     blue: "#1E63EA",
+    modalBackdrop: "rgba(0, 0, 0, 0.25)",
     grayText: "#525252",
   },
 };

@@ -6,6 +6,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import AppNavigation from "./src/navigation/AppNavigation";
 import { enableFreeze } from "react-native-screens";
 import { initializeCardsStore } from "./src/stores/useCardsStore";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 enableFreeze(true);
 initializeCardsStore();
@@ -15,7 +16,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <ThemeProvider theme={scheme === "dark" ? darkTheme : theme}>
-        <AppNavigation />
+        <BottomSheetModalProvider>
+          <AppNavigation />
+        </BottomSheetModalProvider>
       </ThemeProvider>
     </NavigationContainer>
   );

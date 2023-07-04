@@ -1,14 +1,18 @@
-import React, { memo, useState } from "react";
+import React, { memo, useCallback, useMemo, useRef, useState } from "react";
 import { Box, Text } from "../theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BackButton from "../components/core/Button";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackNavigatorParamList } from "../navigation/AppNavigation";
 import Card from "../components/Card";
-import { useSharedValue } from "react-native-reanimated";
+import Animated, { useSharedValue } from "react-native-reanimated";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { maskCardNumber } from "../utils/constants";
 import * as Clipboard from "expo-clipboard";
+import useCardsStore from "../stores/useCardsStore";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useTheme } from "../theme/theme";
+import { MenuIcon } from "../icons";
 
 type ViewCardScreenNavigationProps = NativeStackScreenProps<
   StackNavigatorParamList,
@@ -20,10 +24,26 @@ const ViewCardScreen = ({
   route,
 }: ViewCardScreenNavigationProps) => {
   const insets = useSafeAreaInsets();
+  const { cards, setCard } = useCardsStore();
   const { card } = route.params;
+  const theme = useTheme();
 
   const [visibleCardNumber, setVisibleCardNumber] = useState(false);
   const [visibleCVV, setVisibleCVV] = useState(false);
+
+  // ref
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  // variables
+  const snapPoints = useMemo(() => ["25%", "25%"], []);
+
+  // callbacks
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleCloseModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.close();
+  }, []);
 
   const cardNumberTapped = async () => {
     if (!visibleCardNumber) {
@@ -39,19 +59,35 @@ const ViewCardScreen = ({
     setVisibleCVV((prev) => !prev);
   };
 
+  const deleteCardHandler = () => {
+    const updatedCards = cards.filter(
+      (c) => c.card_number !== card.card_number
+    );
+    setCard(updatedCards);
+    handleCloseModalPress();
+    navigation.goBack();
+  };
+
   return (
     <Box flex={1}>
       <Box
         style={{ paddingTop: insets.top + 10 }}
         alignItems="center"
         flexDirection="row"
+        justifyContent="space-between"
         px="4"
         pb="2"
       >
-        <BackButton />
-        <Text ml="2" fontSize={28} fontWeight="700">
-          View Card
-        </Text>
+        <Box flexDirection="row" alignItems="center">
+          <BackButton />
+          <Text ml="2" fontSize={28} fontWeight="700">
+            View Card
+          </Text>
+        </Box>
+
+        <TouchableOpacity onPress={handlePresentModalPress}>
+          <MenuIcon size={20} />
+        </TouchableOpacity>
       </Box>
 
       <Box
@@ -152,6 +188,61 @@ const ViewCardScreen = ({
           </Box>
         </Box>
       </Box>
+
+      <BottomSheetModal
+        ref={bottomSheetModalRef}
+        index={1}
+        snapPoints={snapPoints}
+        backdropComponent={({ animatedIndex, style }) => (
+          <Animated.View
+            onTouchEnd={() => bottomSheetModalRef.current?.close()}
+            style={[style, { backgroundColor: theme.colors.modalBackdrop }]}
+          />
+        )}
+        handleIndicatorStyle={{
+          display: "none",
+        }}
+      >
+        <TouchableOpacity
+          style={{
+            paddingBottom: 12,
+            borderTopColor: theme.colors.black,
+          }}
+        >
+          <Text textAlign="center">Edit</Text>
+        </TouchableOpacity>
+        <Box borderTopWidth={StyleSheet.hairlineWidth}>
+          <TouchableOpacity
+            style={{
+              padding: 12,
+              borderTopColor: theme.colors.black,
+            }}
+            onPress={deleteCardHandler}
+          >
+            <Text
+              textAlign="center"
+              style={{
+                color: "red",
+              }}
+            >
+              Delete
+            </Text>
+          </TouchableOpacity>
+        </Box>
+        <Box borderTopWidth={StyleSheet.hairlineWidth}>
+          <TouchableOpacity
+            style={{
+              padding: 12,
+              borderTopColor: theme.colors.black,
+            }}
+            onPress={handleCloseModalPress}
+          >
+            <Text textAlign="center" fontWeight="600" fontSize={18}>
+              Cancel
+            </Text>
+          </TouchableOpacity>
+        </Box>
+      </BottomSheetModal>
     </Box>
   );
 };
