@@ -2,9 +2,6 @@
 
 CardHolder is a mobile application built with React Native that allows users to securely store and manage their bank card information. With CardHolder, users can easily access their card details, including card numbers, validity dates, and card types, in one convenient location.
 
-![ezgif com-video-to-gif](https://github.com/ankit64jangir/CardHolder/assets/55452218/fd6b29b2-23d4-426c-8778-b6b69f7d67ae)
-
-
 ## Features
 
 - Securely store and manage multiple bank card details
