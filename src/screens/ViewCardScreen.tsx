@@ -68,6 +68,11 @@ const ViewCardScreen = ({
     navigation.goBack();
   };
 
+  const editCardHandler = () => {
+    handleCloseModalPress();
+    navigation.navigate("AddCard", { card });
+  };
+
   return (
     <Box flex={1}>
       <Box
@@ -208,6 +213,7 @@ const ViewCardScreen = ({
             paddingBottom: 12,
             borderTopColor: theme.colors.black,
           }}
+          onPress={editCardHandler}
         >
           <Text textAlign="center">Edit</Text>
         </TouchableOpacity>

@@ -4,22 +4,31 @@ import { Box, Text } from "../theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BackButton from "../components/core/Button";
 import { cardTypeIndex, CARD_TYPE_IMAGES } from "../utils/constants";
-import { useNavigation } from "@react-navigation/native";
 import useCardsStore from "../stores/useCardsStore";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { StackNavigatorParamList } from "../navigation/AppNavigation";
 
-const AddCardScreen = () => {
+type ViewCardScreenNavigationProps = NativeStackScreenProps<
+  StackNavigatorParamList,
+  "AddCard"
+>;
+
+const AddCardScreen = ({
+  navigation,
+  route,
+}: ViewCardScreenNavigationProps) => {
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation();
+  const { card } = route.params || {};
 
   const { cards, setCard } = useCardsStore();
   const [bankCardData, setBankCardData] = useState<IBankCard>({
-    card_number: "",
-    card_type: "unknown",
-    bank_card_name: "",
-    cvv: "",
-    name: "",
+    card_number: card?.card_number || "",
+    card_type: card?.card_type || "unknown",
+    bank_card_name: card?.bank_card_name || "",
+    cvv: card?.cvv || "",
+    name: card?.name || "",
     type: "BANK_CARD",
-    validity: "",
+    validity: card?.validity || "",
   });
 
   const isDisabled =
@@ -40,6 +49,17 @@ const AddCardScreen = () => {
       validity: "",
     });
     navigation.goBack();
+  };
+
+  const handleUpdateCard = () => {
+    const updatedCards = cards.map((c) => {
+      if (c.card_number === card?.card_number) {
+        return bankCardData;
+      }
+      return c;
+    });
+    setCard(updatedCards);
+    navigation.navigate("Home");
   };
 
   function detectCardType(cardNumber: string) {
@@ -88,7 +108,7 @@ const AddCardScreen = () => {
       >
         <BackButton />
         <Text ml="2" fontSize={28} fontWeight="700">
-          Add New Card
+          {card ? "Edit Card" : "Add New Card"}
         </Text>
       </Box>
 
@@ -164,8 +184,8 @@ const AddCardScreen = () => {
         </Box>
         <Box alignItems="center">
           <Button
-            title="Add Card"
-            onPress={handleAddCard}
+            title={card ? "Update Card" : "Add Card"}
+            onPress={card ? handleUpdateCard : handleAddCard}
             disabled={isDisabled}
           />
         </Box>

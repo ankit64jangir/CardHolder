@@ -10,7 +10,9 @@ import ViewCardScreen from "../screens/ViewCardScreen";
 
 export type StackNavigatorParamList = {
   Home: undefined;
-  AddCard: undefined;
+  AddCard: {
+    card?: IBankCard;
+  };
   ViewCard: {
     card: IBankCard;
   };

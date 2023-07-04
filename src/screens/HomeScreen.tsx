@@ -91,7 +91,7 @@ const HomeScreen = () => {
       <Box position="absolute" bottom={30} right={30} zIndex={50}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("AddCard");
+            navigation.navigate("AddCard", {});
           }}
         >
           <Box
