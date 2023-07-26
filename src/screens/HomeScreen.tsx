@@ -33,11 +33,15 @@ const HomeScreen = () => {
   });
 
   const handleCardPress = (card: IBankCard) => {
-    rotation.value = withTiming(45);
-    setScrollContainerHeight((height / 3.5) * cards.length * 1.3);
-    expanded.value = 1;
-    if (expanded.value == 1) {
+    if (cards.length === 1) {
       navigation.navigate("ViewCard", { card: card });
+    } else {
+      rotation.value = withTiming(45);
+      setScrollContainerHeight((height / 3.5) * cards.length * 1.3);
+      expanded.value = 1;
+      if (expanded.value == 1) {
+        navigation.navigate("ViewCard", { card: card });
+      }
     }
   };
 
