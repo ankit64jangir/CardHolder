@@ -8,29 +8,32 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Card from "../components/Card";
-import { CloseIcon, PlusIcon } from "../icons";
+import { PlusIcon } from "../icons";
 import { NavigationType } from "../navigation/AppNavigation";
 import useCardsStore from "../stores/useCardsStore";
 import theme, { Box, Text } from "../theme";
 import { height } from "../utils/dimensions";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 const HomeScreen = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationType<"ViewCard">>();
   const expanded = useSharedValue(0);
+  const rotation = useSharedValue(0);
 
   const { cards } = useCardsStore();
   const [scrollContainerHeight, setScrollContainerHeight] = useState(height);
 
-  const closeAnimatedBtn = useAnimatedStyle(() => {
+  const rotateAnimatedStyle = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(expanded.value),
+      transform: [{ rotate: rotation.value + "deg" }],
     };
   });
 
   const handleCardPress = (card: IBankCard) => {
+    rotation.value = withTiming(45);
     setScrollContainerHeight((height / 3.5) * cards.length * 1.3);
     expanded.value = 1;
     if (expanded.value == 1) {
@@ -56,15 +59,6 @@ const HomeScreen = () => {
             My Card
           </Text>
         </Box>
-        <AnimatedPressable
-          onPress={() => {
-            expanded.value = 0;
-            setScrollContainerHeight(height);
-          }}
-          style={[closeAnimatedBtn]}
-        >
-          <CloseIcon color={theme.colors.blue} size={24} />
-        </AnimatedPressable>
       </Box>
       <Box mx="2">
         <Animated.ScrollView
@@ -91,19 +85,27 @@ const HomeScreen = () => {
       <Box position="absolute" bottom={30} right={30} zIndex={50}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("AddCard", {});
+            if (rotation.value === 45) {
+              rotation.value = withTiming(0);
+              expanded.value = 0;
+              setScrollContainerHeight(height);
+            } else {
+              navigation.navigate("AddCard", {});
+            }
           }}
+          activeOpacity={0.2}
         >
-          <Box
+          <AnimatedBox
             bg="blue"
             borderRadius={100}
             justifyContent="center"
             alignItems="center"
             width={54}
             height={54}
+            style={[rotateAnimatedStyle]}
           >
             <PlusIcon size={30} color={theme.colors.white} />
-          </Box>
+          </AnimatedBox>
         </TouchableOpacity>
       </Box>
     </Box>
