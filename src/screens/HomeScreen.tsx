@@ -28,7 +28,7 @@ const HomeScreen = () => {
 
   const rotateAnimatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ rotate: rotation.value + "deg" }],
+      transform: [{ rotate: -rotation.value + "deg" }],
     };
   });
 
