@@ -8,7 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Card from "../components/Card";
-import { PlusIcon } from "../icons";
+import { AppIcon, PlusIcon } from "../icons";
 import { NavigationType } from "../navigation/AppNavigation";
 import useCardsStore from "../stores/useCardsStore";
 import theme, { Box, Text } from "../theme";
@@ -66,27 +66,41 @@ const HomeScreen = () => {
           </Text>
         </Box>
       </Box>
-      <Box mx="2">
-        <Animated.ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            height: scrollContainerHeight,
-          }}
-        >
-          {cards?.map((card, index) => {
-            return (
-              <AnimatedPressable
-                onPress={() => handleCardPress(card)}
-                key={index}
-                style={{
-                  top: -120,
-                }}
-              >
-                <Card key={index} card={card} expand={expanded} index={index} />
-              </AnimatedPressable>
-            );
-          })}
-        </Animated.ScrollView>
+      <Box mx="2" flex={1}>
+        {cards.length === 0 || cards === undefined ? (
+          <Box flex={1} justifyContent="center" alignItems="center">
+            <AppIcon size={52} />
+            <Text fontSize={22} fontWeight="400" mt="4">
+              No Cards Found!!!
+            </Text>
+          </Box>
+        ) : (
+          <Animated.ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              height: scrollContainerHeight,
+            }}
+          >
+            {cards?.map((card, index) => {
+              return (
+                <AnimatedPressable
+                  onPress={() => handleCardPress(card)}
+                  key={index}
+                  style={{
+                    top: -120,
+                  }}
+                >
+                  <Card
+                    key={index}
+                    card={card}
+                    expand={expanded}
+                    index={index}
+                  />
+                </AnimatedPressable>
+              );
+            })}
+          </Animated.ScrollView>
+        )}
       </Box>
       <Box position="absolute" bottom={30} right={30} zIndex={50}>
         <TouchableOpacity
