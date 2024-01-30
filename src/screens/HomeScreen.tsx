@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { memo, useState } from "react";
-import { Pressable, TouchableOpacity } from "react-native";
+import { Platform, Pressable, TouchableOpacity } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -20,7 +20,9 @@ const AnimatedBox = Animated.createAnimatedComponent(Box);
 const HomeScreen = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationType<"ViewCard">>();
-  const expanded = useSharedValue(0);
+  const expanded = useSharedValue(
+    Platform.OS === "android" || Platform.OS === "ios" ? 0 : 1
+  );
   const rotation = useSharedValue(0);
 
   const { cards } = useCardsStore();
