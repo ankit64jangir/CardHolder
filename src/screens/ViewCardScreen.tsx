@@ -7,7 +7,7 @@ import { StackNavigatorParamList } from "../navigation/AppNavigation";
 import Card from "../components/Card";
 import Animated, { useSharedValue } from "react-native-reanimated";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { maskCardNumber } from "../utils/constants";
+import { maskCardNumber, Buffer } from "../utils/constants";
 import * as Clipboard from "expo-clipboard";
 import useCardsStore from "../stores/useCardsStore";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -50,7 +50,9 @@ const ViewCardScreen = ({
       setVisibleCardNumber(true);
     }
     if (visibleCardNumber) {
-      await Clipboard.setStringAsync(String(card.card_number));
+      await Clipboard.setStringAsync(
+        new Buffer(card.card_number, "base64").toString()
+      );
       setVisibleCardNumber(false);
     }
   };
@@ -122,7 +124,7 @@ const ViewCardScreen = ({
             >
               <Text letterSpacing={2}>
                 {maskCardNumber({
-                  cardNumber: String(card.card_number),
+                  cardNumber: new Buffer(card.card_number, "base64").toString(),
                   visible: visibleCardNumber,
                 })}
               </Text>
@@ -168,7 +170,7 @@ const ViewCardScreen = ({
               mt="2"
             >
               <Text letterSpacing={1}>
-                {visibleCVV ? String(card.cvv) : "•••"}
+                {visibleCVV ? new Buffer(card.cvv, "base64").toString() : "•••"}
               </Text>
               <TouchableOpacity onPress={cvvTapped}>
                 <Box

@@ -17,6 +17,7 @@ import {
   jcbGradient,
   mastercardGradient,
   visaGradient,
+  Buffer,
 } from "../utils/constants";
 import { ChipIcon, WaveLeftIcon } from "../icons";
 import { useTheme } from "../theme/theme";
@@ -118,7 +119,7 @@ const Card = ({
           <Text style={styles.cardNumber}>&bull;&bull;&bull;&bull;</Text>
           <Text style={styles.cardNumber}>&bull;&bull;&bull;&bull;</Text>
           <Text style={styles.cardNumber}>
-            {String(card.card_number).slice(-4)}
+            {new Buffer(card.card_number, "base64").toString().slice(-4)}
           </Text>
         </Box>
 

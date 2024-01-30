@@ -38,3 +38,5 @@ export const amexGradient = ["#003399", "#730099", "#BD00FF"];
 export const discoverGradient = ["#FFB800", "#FFD700"];
 export const dinersClubGradient = ["#444444", "#888888", "#CCCCCC"];
 export const jcbGradient = ["#003399", "#CC0000"];
+
+export const Buffer = require("buffer").Buffer;

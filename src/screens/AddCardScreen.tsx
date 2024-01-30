@@ -3,7 +3,7 @@ import React, { memo, useEffect, useState } from "react";
 import { Box, Text } from "../theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BackButton from "../components/core/Button";
-import { cardTypeIndex, CARD_TYPE_IMAGES } from "../utils/constants";
+import { cardTypeIndex, CARD_TYPE_IMAGES, Buffer } from "../utils/constants";
 import useCardsStore from "../stores/useCardsStore";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackNavigatorParamList } from "../navigation/AppNavigation";
@@ -93,9 +93,11 @@ const AddCardScreen = ({
   }
 
   useEffect(() => {
-    let type = detectCardType(bankCardData.card_number);
+    let type = detectCardType(
+      new Buffer(bankCardData.card_number, "base64").toString()
+    );
     setBankCardData({ ...bankCardData, card_type: type as CardType });
-  }, [bankCardData.card_number]);
+  }, [new Buffer(bankCardData.card_number, "base64").toString()]);
 
   return (
     <Box flex={1}>
@@ -133,9 +135,14 @@ const AddCardScreen = ({
           <TextInput
             style={styles.input}
             placeholder="Card Number"
-            value={bankCardData.card_number}
+            value={new Buffer(bankCardData.card_number, "base64").toString()}
             onChangeText={(value) =>
-              setBankCardData({ ...bankCardData, card_number: value })
+              setBankCardData({
+                ...bankCardData,
+                card_number: new Buffer(value.replaceAll(" ", "")).toString(
+                  "base64"
+                ),
+              })
             }
             keyboardType="number-pad"
           />
@@ -174,9 +181,12 @@ const AddCardScreen = ({
             style={{ ...styles.input, width: "48%" }}
             keyboardType="number-pad"
             placeholder="CVV"
-            value={String(bankCardData.cvv)}
+            value={new Buffer(bankCardData.cvv, "base64").toString()}
             onChangeText={(value) =>
-              setBankCardData({ ...bankCardData, cvv: value })
+              setBankCardData({
+                ...bankCardData,
+                cvv: new Buffer(value).toString("base64"),
+              })
             }
             secureTextEntry
             maxLength={3}
