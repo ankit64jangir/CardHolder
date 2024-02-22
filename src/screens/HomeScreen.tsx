@@ -2,6 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { memo, useState } from "react";
 import { Platform, Pressable, TouchableOpacity } from "react-native";
 import Animated, {
+  AnimatedStyleProp,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -28,7 +29,7 @@ const HomeScreen = () => {
   const { cards } = useCardsStore();
   const [scrollContainerHeight, setScrollContainerHeight] = useState(height);
 
-  const rotateAnimatedStyle = useAnimatedStyle(() => {
+  const rotateAnimatedStyle = useAnimatedStyle<AnimatedStyleProp<any>>(() => {
     return {
       transform: [{ rotate: -rotation.value + "deg" }],
     };

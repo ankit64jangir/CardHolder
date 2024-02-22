@@ -3,6 +3,7 @@ import React, { memo } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Box, Text } from "../theme";
 import Animated, {
+  AnimatedStyleProp,
   useAnimatedStyle,
   withSpring,
 } from "react-native-reanimated";
@@ -62,7 +63,7 @@ const Card = ({
     }
   };
 
-  const cardAnimatedStyle = useAnimatedStyle(() => {
+  const cardAnimatedStyle = useAnimatedStyle<AnimatedStyleProp<any>>(() => {
     const initialSpace = (index + 1) * 50;
     const expandedSpace = (index * height) / 3.5;
     const extraSpace = initialSpace / (index + 1) + index * 10;
